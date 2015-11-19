@@ -10,6 +10,8 @@
 
 namespace auth_oidc;
 
+defined('INTERNAL') || die();
+
 /**
  * Implementation of \auth_oidc\httpclientinterface using cURL.
  */
@@ -30,7 +32,8 @@ class httpclient implements \auth_oidc\httpclientinterface {
         );
         if ($method === 'get') {
             $curlopts[CURLOPT_HTTPGET] = true;
-        } elseif ($method === 'post') {
+        }
+        else if ($method === 'post') {
             $curlopts[CURLOPT_POST] = true;
             $curlopts[CURLOPT_POSTFIELDS] = $data;
         }

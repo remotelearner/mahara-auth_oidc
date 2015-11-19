@@ -10,6 +10,8 @@
 
 namespace auth_oidc;
 
+defined('INTERNAL') || die();
+
 require_once('pieforms/pieform.php');
 
 /**

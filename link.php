@@ -55,6 +55,7 @@ $is_loggedin = $USER->is_logged_in();
 $linker = new \auth_oidc\linker($linkdata);
 if ($is_loggedin) {
     $linker->showlinkform();
-} else {
+}
+else {
     $linker->showloginform();
 }

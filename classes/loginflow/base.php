@@ -10,6 +10,8 @@
 
 namespace auth_oidc\loginflow;
 
+defined('INTERNAL') || die();
+
 class base {
     /** @var object Plugin config. */
     public $config;

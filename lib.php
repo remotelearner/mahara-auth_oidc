@@ -88,7 +88,8 @@ class AuthOidc extends Auth {
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
-        } catch (\AuthUnknownUserException $e) {
+        }
+        catch (\AuthUnknownUserException $e) {
             if ($this->can_auto_create_users() === true) {
                 $institution = new \Institution($this->institution);
                 if ($institution->isFull()) {
@@ -96,7 +97,8 @@ class AuthOidc extends Auth {
                 }
                 $user = new \User;
                 $create = true;
-            } else {
+            }
+            else {
                 return false;
             }
         }
@@ -287,7 +289,8 @@ class PluginAuthOidc extends PluginAuth {
             if (!empty($instanceid)) {
                 $saved = get_config_plugin_instance('auth', $instanceid, $key);
                 $curconfig[$key] = ($saved !== null) ? $saved : $default;
-            } else {
+            }
+            else {
                 $curconfig[$key] = $default;
             }
         }
@@ -362,7 +365,8 @@ class PluginAuthOidc extends PluginAuth {
             $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
             $authinstance->id = $values['instance'];
             update_record('auth_instance', $authinstance, array('id' => $values['instance']));
-        } else {
+        }
+        else {
             $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
             $authinstance->priority = (!empty($lastinstance)) ? $lastinstance[0]->priority + 1 : 0;
             $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);

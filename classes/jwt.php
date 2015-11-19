@@ -10,6 +10,8 @@
 
 namespace auth_oidc;
 
+defined('INTERNAL') || die();
+
 /**
  * Class for working with JWTs.
  */
@@ -50,7 +52,8 @@ class jwt {
         $jwsalgs = array('HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'none');
         if (in_array($header['alg'], $jwsalgs, true) === true) {
             $body = static::decode_jws($jwtparts);
-        } else {
+        }
+        else {
             throw new \AuthInstanceException(get_string('errorjwtunsupportedalg', 'auth.oidc'));
         }
 

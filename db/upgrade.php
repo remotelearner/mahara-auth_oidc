@@ -8,6 +8,8 @@
  * @copyright (C) 2015 onwards Microsoft Open Technologies, Inc. (http://msopentech.com/)
  */
 
+defined('INTERNAL') || die();
+
 /**
  * Update plugin.
  *

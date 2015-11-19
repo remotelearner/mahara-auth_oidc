@@ -10,6 +10,8 @@
 
 namespace auth_oidc\loginflow;
 
+defined('INTERNAL') || die();
+
 /**
  * Login flow for the oauth2 authorization code grant.
  */
@@ -26,7 +28,8 @@ class authcode extends \auth_oidc\loginflow\base {
         if (!empty($state)) {
             // Response from OP.
             $this->handleauthresponse($_REQUEST);
-        } else {
+        }
+        else {
             // Initial login request.
             $this->initiateauthrequest($promptlogin, array('forceflow' => 'authcode'));
         }
@@ -64,7 +67,8 @@ class authcode extends \auth_oidc\loginflow\base {
             $reqval = get_config_plugin_instance('auth', $instance->instanceid, 'institutionvalue');
             if (empty($reqattr) || empty($reqval)) {
                 $catchalls[$instance->institutionpriority][] = $instance;
-            } else {
+            }
+            else {
                 // Check if we received specified attribute.
                 $userattrval = $idtoken->claim($reqattr);
                 if (!empty($userattrval)) {
@@ -146,7 +150,8 @@ class authcode extends \auth_oidc\loginflow\base {
         $can_login = $auth->request_user_authorise($oidcuniqid, $tokenparams, $idtoken);
         if ($can_login === true) {
             redirect('/');
-        } else {
+        }
+        else {
             // Office 365 uses "upn".
             $oidcusername = $oidcuniqid;
             $upn = $idtoken->claim('upn');

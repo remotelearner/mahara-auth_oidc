@@ -10,6 +10,8 @@
 
 namespace auth_oidc;
 
+defined('INTERNAL') || die();
+
 /**
  * Interface defining an HTTP client.
  */

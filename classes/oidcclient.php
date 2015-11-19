@@ -10,6 +10,8 @@
 
 namespace auth_oidc;
 
+defined('INTERNAL') || die();
+
 /**
  * OpenID Connect Client
  */
@@ -171,7 +173,8 @@ class oidcclient {
         $querystring = http_build_query($params);
         if (strpos($redirecturl, '?') !== false) {
             $redirecturl .= '&'.$querystring;
-        } else {
+        }
+        else {
             $redirecturl .= '?'.$querystring;
         }
         redirect($redirecturl);
@@ -198,7 +201,8 @@ class oidcclient {
         try {
             $returned = $this->httpclient->post($this->endpoints['token'], $params);
             return @json_decode($returned, true);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return $e->getMessage();
         }
     }
