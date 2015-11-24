@@ -48,7 +48,7 @@ function auth_oidc_login_cancel_submit(\Pieform $form) {
 
 $linkdata = $SESSION->get('auth_oidc_linkdata');
 if (empty($linkdata)) {
-    redirect('/');
+    $linkdata = [];
 }
 
 $is_loggedin = $USER->is_logged_in();

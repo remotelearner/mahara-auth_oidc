@@ -18,11 +18,11 @@ require_once('pieforms/pieform.php');
  * Performs local-OIDC account linking forms + functions.
  */
 class linker {
-    /** @var int The auth instance id to use when linking accounts. */
-    protected $authinstance;
+    /** @var int|null The auth instance id to use when linking accounts. */
+    protected $authinstance = null;
 
     /** @var string The username of the OpenID Connect user to link to. */
-    protected $oidcusername;
+    protected $oidcusername = '';
 
     /**
      * Constructor.
@@ -30,8 +30,8 @@ class linker {
      * @param array $linkdata Array of OIDC user data and auth instance ID, to link accounts.
      */
     public function __construct($linkdata) {
-        $this->authinstance = $linkdata['authinstance'];
-        $this->oidcusername = $linkdata['oidcusername'];
+        $this->authinstance = (isset($linkdata['authinstance'])) ? $linkdata['authinstance'] : null;
+        $this->oidcusername = (isset($linkdata['oidcusername'])) ? $linkdata['oidcusername'] : '';
     }
 
     /**
@@ -75,6 +75,10 @@ class linker {
      */
     public function loginlink_submit(\Pieform $form, $values) {
         global $USER, $SESSION;
+        if ($this->authinstance === null || empty($this->oidcusername)) {
+            // User is not logged in. They should never reach here, but as a failsafe...
+            redirect('/');
+        }
         db_begin();
         delete_records('auth_remote_user', 'authinstance', $this->authinstance, 'localusr', $USER->id);
         insert_record('auth_remote_user', (object)array(
@@ -153,9 +157,23 @@ class linker {
      * @param array $values Array of submitted values.
      */
     public function login_submit(\Pieform $form, $values) {
-        global $USER;
-        login_submit($form, $values);
+        global $USER, $SESSION;
+        // Save our OIDC info, because an invalid login will destroy it.
+        $oidclinkdata = $SESSION->get('auth_oidc_linkdata');
+        try {
+            login_submit($form, $values);
+        }
+        catch (\AuthUnknownUserException $e) {
+            $SESSION->set('auth_oidc_linkdata', $oidclinkdata);
+            $SESSION->add_error_msg(get_string('loginfailed'));
+            redirect('/auth/oidc/link.php');
+        }
         if ($USER->is_logged_in()) {
+            redirect('/auth/oidc/link.php');
+        }
+        else {
+            $SESSION->set('auth_oidc_linkdata', $oidclinkdata);
+            $SESSION->add_error_msg(get_string('loginfailed'));
             redirect('/auth/oidc/link.php');
         }
     }
