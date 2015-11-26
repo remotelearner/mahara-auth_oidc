@@ -173,7 +173,9 @@ class linker {
         }
         else {
             $SESSION->set('auth_oidc_linkdata', $oidclinkdata);
-            $SESSION->add_error_msg(get_string('loginfailed'));
+            if (empty($_SESSION['messages'])) {
+                $SESSION->add_error_msg(get_string('loginfailed'));
+            }
             redirect('/auth/oidc/link.php');
         }
     }
